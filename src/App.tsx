@@ -306,7 +306,7 @@ const SidebarItem = ({
       <button
         ref={btnRef}
         onClick={handleIconClick}
-        className={`sidebar-item w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${isActive ? 'active' : ''}`}
+        className={`sidebar-item w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${!isSidebarOpen ? 'justify-center' : ''} ${isActive ? 'active' : ''}`}
         style={{ paddingLeft: isSidebarOpen ? `${(level * 12) + 12}px` : '12px', position: 'relative' }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -1519,18 +1519,22 @@ export default function App() {
       {/* Sidebar */}
       <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-sidebar transition-all duration-300 flex flex-col border-r border-white/5 z-50 relative`}>
         {/* Toggle button always at top right, centered when collapsed */}
-        <div className="h-16 flex items-center px-3 gap-3 relative">
+        <div className={`h-16 flex items-center px-3 gap-3 relative${!isSidebarOpen ? ' justify-center' : ''}`}> 
           {/* Logo and label */}
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <Building2 className="text-white w-5 h-5" />
+          <div className="w-10 h-10 bg-white flex items-center justify-center rounded-lg shadow border border-primary">
+            <span className="text-primary font-extrabold text-xl" style={{fontFamily: 'Inter, sans-serif'}}>SCT</span>
           </div>
-          {isSidebarOpen && <span className="text-white font-bold text-xl tracking-tight ml-2">Propel</span>}
+          {isSidebarOpen && (
+            <div className="ml-2 flex flex-col">
+              <span className="text-white font-bold text-xl tracking-tight leading-tight">SafeClimateTrip</span>
+              <span className="text-slate-200 text-xs leading-tight" style={{color:'#B6D0F7'}}>Travel Responsibly</span>
+            </div>
+          )}
           {/* Collapse/expand button */}
           <button
             aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
             onClick={() => setIsSidebarOpen((v) => !v)}
-            className={`p-2 rounded-lg hover:bg-primary/20 text-white transition-colors focus:outline-none absolute ${isSidebarOpen ? 'right-2 top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'}`}
-            style={{ zIndex: 10 }}
+            className="absolute right-[-18px] top-[50px] w-8 h-8 rounded-full text-white focus:outline-none shadow-lg border border-white/10 bg-primary z-20 flex items-center justify-center"
           >
             {isSidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
           </button>
