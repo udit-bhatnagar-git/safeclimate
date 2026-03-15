@@ -88,7 +88,6 @@ const navItems: NavItem[] = [
             icon: BedDouble,
             children: [
               { id: 'room-categories', label: 'Room Categories', icon: LayoutGrid },
-              { id: 'cancellation-policy', label: 'Cancellation Policy', icon: XCircle },
             ]
           },
           {
@@ -105,6 +104,7 @@ const navItems: NavItem[] = [
     ]
   },
   { id: 'bookings', label: 'Bookings', icon: CalendarDays },
+  { id: 'cancellation-policy', label: 'Cancellation Policy', icon: XCircle },
   { id: 'reviews', label: 'Reviews', icon: Sparkles },
   { id: 'guests', label: 'Guests', icon: Users },
   { id: 'staff', label: 'Staff', icon: UserCircle },

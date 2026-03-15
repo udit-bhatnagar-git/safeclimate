@@ -402,7 +402,7 @@ const CancellationPolicyView = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="w-6 h-6 text-emerald-400" />
-                  <h2 className="text-lg font-black tracking-tight uppercase">SafeClimate™</h2>
+                  <h2 className="text-lg font-black tracking-tight uppercase !text-white">SafeClimate™</h2>
                 </div>
                 <button 
                   onClick={() => setSafeClimateEnabled(!safeClimateEnabled)}
@@ -413,15 +413,15 @@ const CancellationPolicyView = () => {
               </div>
               
               <div>
-                <h3 className="text-xl font-bold mb-2">Emergency Weather Clause</h3>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <h3 className="text-xl font-bold mb-2 !text-white">Emergency Weather Clause</h3>
+                <p className="text-sm text-white/80 leading-relaxed">
                   Automatically allows full refunds to guests during extreme weather events (Level 3+ alerts).
                 </p>
               </div>
               
               <div className="pt-4 border-t border-white/10 flex items-center gap-3">
                 <Sparkles className="w-5 h-5 text-amber-400" />
-                <span className="text-xs font-bold text-white/80">Increases trust score by +15%</span>
+                <span className="text-xs font-bold text-white/90">Increases trust score by +15%</span>
               </div>
             </div>
             
