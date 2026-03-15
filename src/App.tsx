@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   LayoutDashboard, 
   Building2, 
@@ -50,6 +50,7 @@ import {
   Settings
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import ImageUploader from './components/ImageUploader';
 
 // Types
 type NavItem = {
@@ -232,47 +233,88 @@ const MultiSelectField = ({
   );
 };
 
-const SidebarItem = ({ 
-  item, 
-  activeTab, 
-  setActiveTab, 
-  isSidebarOpen, 
-  level = 0 
-}: { 
-  item: NavItem; 
-  activeTab: string; 
-  setActiveTab: (id: string) => void; 
+const SidebarItem = ({
+  item,
+  activeTab,
+  setActiveTab,
+  isSidebarOpen,
+  level = 0,
+  parentCollapsed,
+  showTooltip,
+  onShowFloating,
+  floatingOpen,
+  closeFloating
+}: {
+  item: NavItem;
+  activeTab: string;
+  setActiveTab: (id: string) => void;
   isSidebarOpen: boolean;
   level?: number;
   key?: React.Key;
+  parentCollapsed?: boolean;
+  showTooltip?: boolean;
+  onShowFloating?: (item: NavItem, anchorRect: DOMRect) => void;
+  floatingOpen?: boolean;
+  closeFloating?: () => void;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
   const isActive = activeTab === item.id;
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  const handleClick = (e: React.MouseEvent) => {
+  // For floating submenu
+  const handleIconClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (hasChildren) {
-      setIsExpanded(!isExpanded);
+    if (isSidebarOpen) {
+      if (hasChildren) setIsExpanded((v) => !v);
+      else setActiveTab(item.id);
     } else {
-      setActiveTab(item.id);
+      if (hasChildren && onShowFloating && btnRef.current) {
+        onShowFloating(item, btnRef.current.getBoundingClientRect());
+      } else {
+        setActiveTab(item.id);
+      }
     }
   };
 
+  // Tooltip for collapsed
+  const tooltip = !isSidebarOpen && showTooltip ? (
+    <span className="fixed z-[9999] left-20 bg-slate-900 text-white text-xs rounded px-2 py-1 shadow-lg pointer-events-none" style={{ top: btnRef.current?.getBoundingClientRect().top ?? 0 }}>{item.label}</span>
+  ) : null;
+
+  // Floating submenu for collapsed
+  const floatingMenu = (!isSidebarOpen && floatingOpen && hasChildren) ? (
+    <div className="fixed z-[9999] left-20 bg-white border border-border rounded-xl shadow-xl min-w-[180px] py-2" style={{ top: btnRef.current?.getBoundingClientRect().top ?? 0 }} onMouseLeave={closeFloating}>
+      {item.children?.map((child) => (
+        <button
+          key={child.id}
+          className={`flex items-center gap-3 w-full px-4 py-2 hover:bg-primary/10 text-slate-700 text-sm ${activeTab === child.id ? 'font-bold text-primary' : ''}`}
+          onClick={() => { setActiveTab(child.id); if (closeFloating) closeFloating(); }}
+        >
+          {child.icon && <child.icon className="w-5 h-5 text-slate-400" />}
+          <span>{child.label}</span>
+        </button>
+      ))}
+    </div>
+  ) : null;
+
+  // Mouse events for tooltip
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <div className="w-full">
+    <div className="w-full relative" onMouseLeave={() => { if (closeFloating) closeFloating(); }}>
       <button
-        onClick={handleClick}
-        className={`sidebar-item w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${
-          isActive ? 'active' : ''
-        }`}
-        style={{ paddingLeft: isSidebarOpen ? `${(level * 12) + 12}px` : '12px' }}
+        ref={btnRef}
+        onClick={handleIconClick}
+        className={`sidebar-item w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group ${isActive ? 'active' : ''}`}
+        style={{ paddingLeft: isSidebarOpen ? `${(level * 12) + 12}px` : '12px', position: 'relative' }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         {item.icon && <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-primary' : 'text-slate-400 group-hover:text-white'}`} />}
         {!item.icon && level > 0 && <div className="w-5 h-5 shrink-0 flex items-center justify-center">
           <div className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-primary' : 'bg-slate-600'}`} />
         </div>}
-        
         {isSidebarOpen && (
           <div className="flex-1 flex items-center justify-between overflow-hidden">
             <span className="font-medium truncate text-sm">{item.label}</span>
@@ -286,8 +328,12 @@ const SidebarItem = ({
             )}
           </div>
         )}
+        {/* Tooltip for collapsed */}
+        {!isSidebarOpen && hovered && (
+          <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs rounded px-2 py-1 shadow-lg pointer-events-none whitespace-nowrap z-50">{item.label}</span>
+        )}
       </button>
-
+      {/* Expanded children (expanded mode) */}
       {hasChildren && isSidebarOpen && (
         <AnimatePresence initial={false}>
           {isExpanded && (
@@ -312,6 +358,8 @@ const SidebarItem = ({
           )}
         </AnimatePresence>
       )}
+      {/* Floating submenu (collapsed mode) */}
+      {floatingMenu}
     </div>
   );
 };
@@ -1159,7 +1207,30 @@ const AddPropertyWizard = ({ onComplete }: { onComplete: () => void }) => {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Persist sidebar state in localStorage
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('sidebarOpen') : null;
+    return stored === null ? true : stored === 'true';
+  });
+  useEffect(() => {
+    if (typeof window !== 'undefined') localStorage.setItem('sidebarOpen', String(isSidebarOpen));
+  }, [isSidebarOpen]);
+
+  // Floating submenu state
+  const [floatingMenu, setFloatingMenu] = useState<{item: NavItem, top: number} | null>(null);
+  const [floatingAnchor, setFloatingAnchor] = useState<DOMRect | null>(null);
+  const floatingTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Close floating submenu on click outside
+  useEffect(() => {
+    if (!floatingMenu) return;
+    const handle = (e: MouseEvent) => {
+      setFloatingMenu(null);
+      setFloatingAnchor(null);
+    };
+    document.addEventListener('mousedown', handle);
+    return () => document.removeEventListener('mousedown', handle);
+  }, [floatingMenu]);
   const [subscription, setSubscription] = useState({
     status: 'trial', // 'trial', 'active', 'expired', 'cancelled'
     planId: 'basic',
@@ -1446,15 +1517,26 @@ export default function App() {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-sidebar transition-all duration-300 flex flex-col border-r border-white/5 z-50`}>
-        <div className="h-16 flex items-center px-6 gap-3">
+      <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-sidebar transition-all duration-300 flex flex-col border-r border-white/5 z-50 relative`}>
+        {/* Toggle button always at top right, centered when collapsed */}
+        <div className="h-16 flex items-center px-3 gap-3 relative">
+          {/* Logo and label */}
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <Building2 className="text-white w-5 h-5" />
           </div>
-          {isSidebarOpen && <span className="text-white font-bold text-xl tracking-tight">Propel</span>}
+          {isSidebarOpen && <span className="text-white font-bold text-xl tracking-tight ml-2">Propel</span>}
+          {/* Collapse/expand button */}
+          <button
+            aria-label={isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+            onClick={() => setIsSidebarOpen((v) => !v)}
+            className={`p-2 rounded-lg hover:bg-primary/20 text-white transition-colors focus:outline-none absolute ${isSidebarOpen ? 'right-2 top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'}`}
+            style={{ zIndex: 10 }}
+          >
+            {isSidebarOpen ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+          </button>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar relative">
           {navItems.map((item) => (
             <SidebarItem
               key={item.id}
@@ -1462,11 +1544,37 @@ export default function App() {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               isSidebarOpen={isSidebarOpen}
+              showTooltip={!isSidebarOpen}
+              onShowFloating={(item, anchorRect) => {
+                setFloatingMenu({ item, top: anchorRect.top });
+                setFloatingAnchor(anchorRect);
+              }}
+              floatingOpen={floatingMenu?.item.id === item.id}
+              closeFloating={() => { setFloatingMenu(null); setFloatingAnchor(null); }}
             />
           ))}
+          {/* Floating submenu root (collapsed mode) */}
+          {!isSidebarOpen && floatingMenu && floatingAnchor && floatingMenu.item.children && (
+            <div
+              className="fixed z-[9999] bg-white border border-border rounded-xl shadow-xl min-w-[180px] py-2"
+              style={{ left: floatingAnchor.right + 4, top: floatingAnchor.top, maxWidth: 240 }}
+              onMouseLeave={() => { setFloatingMenu(null); setFloatingAnchor(null); }}
+            >
+              {floatingMenu.item.children.map((child) => (
+                <button
+                  key={child.id}
+                  className={`flex items-center gap-3 w-full px-4 py-2 hover:bg-primary/10 text-slate-700 text-sm ${activeTab === child.id ? 'font-bold text-primary' : ''}`}
+                  onClick={() => { setActiveTab(child.id); setFloatingMenu(null); setFloatingAnchor(null); }}
+                >
+                  {child.icon && <child.icon className="w-5 h-5 text-slate-400" />}
+                  <span>{child.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </nav>
 
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/5 absolute bottom-0 left-0 w-full bg-sidebar">
           <div className="flex items-center gap-3 px-2">
             <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs text-white font-medium">
               UB
