@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Roboto", ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
   
   --color-primary: #2F80ED;
   --color-primary-hover: #1C6ED5;
@@ -12,22 +12,56 @@
   --color-sidebar: #0F172A;
   --color-sidebar-hover: #1E293B;
 
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #9CA3AF;
+
   --radius-card: 12px;
   --radius-input: 8px;
   --radius-button: 8px;
+
+  /* Typography Scale */
+  --text-display: 24px;
+  --text-section: 20px;
+  --text-subsection: 18px;
+  --text-body: 16px;
+  --text-small: 14px;
+  --text-caption: 12px;
+  --text-metric: 28px;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 700;
+
+  /* Line Heights */
+  --line-height-heading: 1.3;
+  --line-height-body: 1.5;
+  --line-height-small: 1.4;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: 0.02em;
 }
 
 @layer base {
   body {
-    @apply bg-background text-[#111827] font-sans antialiased;
+    @apply bg-background text-text-primary font-sans antialiased text-[16px] leading-[1.5];
   }
 
-  h1 { @apply text-[24px] font-semibold leading-tight; }
-  h2 { @apply text-[20px] font-semibold leading-tight; }
-  h3 { @apply text-[18px] font-semibold leading-tight; }
-  p { @apply text-[16px] leading-relaxed; }
-  label { @apply text-[14px] font-medium text-[#6B7280]; }
-  .caption { @apply text-[12px] text-[#6B7280]; }
+  h1 { @apply text-[24px] font-bold leading-[1.3] text-text-primary; }
+  h2 { @apply text-[20px] font-bold leading-[1.3] text-text-primary; }
+  h3 { @apply text-[18px] font-medium leading-[1.3] text-text-primary; }
+  p { @apply text-[16px] font-normal leading-[1.5] text-text-secondary; }
+  label { @apply text-[14px] font-medium text-text-secondary; }
+  .caption { @apply text-[12px] font-normal leading-normal text-text-muted; }
+  
+  table thead th {
+    @apply text-[14px] font-bold text-text-secondary uppercase tracking-[0.02em] text-left;
+  }
+  
+  table tbody td {
+    @apply text-[14px] font-normal text-text-primary;
+  }
 }
 
 @layer components {
@@ -36,25 +70,33 @@
   }
 
   .input {
-    @apply h-[44px] w-full px-4 py-3 rounded-[8px] border border-border bg-white text-[#111827] focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-[#2F80ED26] transition-all;
+    @apply h-[44px] w-full px-4 py-3 rounded-[8px] border border-border bg-white text-text-primary text-[16px] font-normal focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-[#2F80ED26] transition-all placeholder:text-text-muted;
   }
 
   .btn-primary {
-    @apply h-[44px] px-5 rounded-[8px] bg-primary text-white font-semibold hover:bg-primary-hover transition-colors flex items-center justify-center gap-2;
+    @apply h-[40px] px-5 rounded-[8px] bg-primary text-white text-[14px] font-bold hover:bg-primary-hover transition-colors flex items-center justify-center gap-2;
   }
 
   .btn-secondary {
-    @apply h-[44px] px-5 rounded-[8px] bg-white border border-border text-[#111827] font-semibold hover:bg-background transition-colors flex items-center justify-center gap-2;
+    @apply h-[40px] px-5 rounded-[8px] bg-white border border-border text-text-primary text-[14px] font-medium hover:bg-background transition-colors flex items-center justify-center gap-2;
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-sidebar-hover transition-all cursor-pointer;
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 text-[14px] font-medium hover:text-white hover:bg-sidebar-hover transition-all cursor-pointer;
   }
 
   .sidebar-item.active {
-    @apply text-white bg-primary/10 text-primary;
+    @apply text-white bg-primary/10 text-primary font-bold;
   }
 
+  .metric-value {
+    @apply text-[28px] font-bold text-text-primary leading-[1.3];
+  }
+
+  .card-title {
+    @apply text-[18px] font-bold text-text-primary leading-[1.3];
+  }
+  
   .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
   }

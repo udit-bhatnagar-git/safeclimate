@@ -51,6 +51,12 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ImageUploader from './components/ImageUploader';
+import SupportPanel from './components/SupportPanel';
+import BookingManagementView from './components/BookingManagementView';
+import ReviewsManagementView from './components/ReviewsManagementView';
+import StaffManagementView from './components/StaffManagementView';
+import GuestManagementView from './components/GuestManagementView';
+import CancellationPolicyView from './components/CancellationPolicyView';
 
 // Types
 type NavItem = {
@@ -99,6 +105,7 @@ const navItems: NavItem[] = [
     ]
   },
   { id: 'bookings', label: 'Bookings', icon: CalendarDays },
+  { id: 'reviews', label: 'Reviews', icon: Sparkles },
   { id: 'guests', label: 'Guests', icon: Users },
   { id: 'staff', label: 'Staff', icon: UserCircle },
   {
@@ -133,8 +140,8 @@ const Toggle = ({ enabled, onChange, label }: { enabled: boolean; onChange: (val
 const SectionCard = ({ title, children, description }: { title: string; children: React.ReactNode; description?: string; key?: React.Key }) => (
   <div className="bg-white rounded-xl shadow-sm border border-border p-6 space-y-6">
     <div>
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-      {description && <p className="text-sm text-slate-500 mt-1">{description}</p>}
+      <h3 className="card-title">{title}</h3>
+      {description && <p className="text-sm text-text-secondary mt-1">{description}</p>}
     </div>
     <div className="space-y-6">
       {children}
@@ -167,17 +174,17 @@ const MultiSelectField = ({
 
   return (
     <div className="space-y-3">
-      <label className="text-sm font-semibold text-slate-700">{label}</label>
+      <label>{label}</label>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="input w-full flex items-center justify-between text-left"
         >
-          <span className={selected.length === 0 ? 'text-slate-400' : 'text-slate-900'}>
+          <span className={selected.length === 0 ? 'text-text-muted' : 'text-text-primary'}>
             {selected.length === 0 ? placeholder : `${selected.length} items selected`}
           </span>
-          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-4 h-4 text-text-muted transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         <AnimatePresence>
@@ -197,8 +204,8 @@ const MultiSelectField = ({
                   <button
                     key={option}
                     onClick={() => toggleOption(option)}
-                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center justify-between ${
-                      selected.includes(option) ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-slate-50 text-slate-600'
+                    className={`w-full text-left px-3 py-2 rounded-lg text-[14px] transition-colors flex items-center justify-between ${
+                      selected.includes(option) ? 'bg-primary/10 text-primary font-medium' : 'hover:bg-slate-50 text-text-secondary'
                     }`}
                   >
                     {option}
@@ -317,7 +324,7 @@ const SidebarItem = ({
         </div>}
         {isSidebarOpen && (
           <div className="flex-1 flex items-center justify-between overflow-hidden">
-            <span className="font-medium truncate text-sm">{item.label}</span>
+            <span className="truncate">{item.label}</span>
             {hasChildren && (
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -330,7 +337,7 @@ const SidebarItem = ({
         )}
         {/* Tooltip for collapsed */}
         {!isSidebarOpen && hovered && (
-          <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs rounded px-2 py-1 shadow-lg pointer-events-none whitespace-nowrap z-50">{item.label}</span>
+          <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-[12px] rounded px-2 py-1 shadow-lg pointer-events-none whitespace-nowrap z-50">{item.label}</span>
         )}
       </button>
       {/* Expanded children (expanded mode) */}
@@ -371,8 +378,8 @@ const PropertyInfoView = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Property Information</h1>
-          <p className="text-slate-500">Manage your property's basic details and location.</p>
+          <h1>Property Information</h1>
+          <p>Manage your property's basic details and location.</p>
         </div>
         <Toggle enabled={propertyEnabled} onChange={setPropertyEnabled} label="Property Active" />
       </div>
@@ -380,7 +387,7 @@ const PropertyInfoView = () => {
       <SectionCard title="Basic Details">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Property Name</label>
+            <label>Property Name</label>
             <input type="text" className="input w-full" placeholder="e.g. Grand Plaza Hotel" />
           </div>
           <div className="space-y-2">
@@ -439,11 +446,11 @@ const PropertyInfoView = () => {
       <SectionCard title="Timing">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Check-in Time</label>
+            <label>Check-in Time</label>
             <input type="time" className="input w-full" />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-slate-700">Check-out Time</label>
+            <label>Check-out Time</label>
             <input type="time" className="input w-full" />
           </div>
         </div>
@@ -469,8 +476,8 @@ const PropertyFeaturesView = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Property Features</h1>
-        <p className="text-slate-500">Select the amenities and services available at your property.</p>
+        <h1>Property Features</h1>
+        <p>Select the amenities and services available at your property.</p>
       </div>
 
       <SectionCard title="Features & Amenities">
@@ -528,8 +535,8 @@ const PropertyPoliciesView = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Property Policies</h1>
-        <p className="text-slate-500">Define the rules and regulations for guests staying at your property.</p>
+        <h1>Property Policies</h1>
+        <p>Define the rules and regulations for guests staying at your property.</p>
       </div>
 
       <SectionCard title="General Policies">
@@ -677,60 +684,7 @@ const RoomCategoriesView = () => (
   </div>
 );
 
-const CancellationPolicyView = () => {
-  const [selectedPolicy, setSelectedPolicy] = useState('flexible');
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Cancellation Policy</h1>
-        <p className="text-slate-500">Choose a policy that works best for your business model.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {[
-          { id: 'flexible', title: 'Flexible', description: 'Full refund 1 day prior to arrival' },
-          { id: 'moderate', title: 'Moderate', description: 'Full refund 5 days prior to arrival' },
-          { id: 'strict', title: 'Strict', description: '50% refund up to 7 days before arrival' },
-          { id: 'custom', title: 'Custom', description: 'Define your own cancellation rules' },
-        ].map((policy) => (
-          <button
-            key={policy.id}
-            onClick={() => setSelectedPolicy(policy.id)}
-            className={`p-6 rounded-xl border-2 text-left transition-all ${
-              selectedPolicy === policy.id ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200'
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-slate-900">{policy.title}</h3>
-              {selectedPolicy === policy.id && <CheckCircle2 className="w-5 h-5 text-primary" />}
-            </div>
-            <p className="text-sm text-slate-500">{policy.description}</p>
-          </button>
-        ))}
-      </div>
-
-      {selectedPolicy === 'custom' && (
-        <SectionCard title="Custom Rules">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-slate-600">If cancelled within</span>
-              <input type="number" className="input w-24" defaultValue="48" />
-              <span className="text-sm text-slate-600">hours of check-in, charge</span>
-              <input type="number" className="input w-24" defaultValue="100" />
-              <span className="text-sm text-slate-600">% of booking amount.</span>
-            </div>
-          </div>
-        </SectionCard>
-      )}
-
-      <div className="flex justify-end gap-3">
-        <button className="btn-secondary px-6">Cancel</button>
-        <button className="btn-primary px-6">Save Policy</button>
-      </div>
-    </div>
-  );
-};
+// CancellationPolicyView moved to components/CancellationPolicyView.tsx
 
 const KYCDetailsView = () => (
   <div className="space-y-6">
@@ -866,8 +820,8 @@ const SubscriptionView = ({ subscription, setSubscription }: { subscription: any
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Subscription</h1>
-          <p className="text-slate-500">Manage your plan and billing information.</p>
+          <h1>Subscription</h1>
+          <p>Manage your plan and billing information.</p>
         </div>
         {subscription.status === 'trial' && (
           <div className="px-4 py-2 bg-amber-50 border border-amber-100 rounded-xl flex items-center gap-3">
@@ -930,11 +884,11 @@ const SubscriptionView = ({ subscription, setSubscription }: { subscription: any
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-border">
-                <th className="pb-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                <th className="pb-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Plan</th>
-                <th className="pb-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
-                <th className="pb-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="pb-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Invoice</th>
+                <th className="pb-4">Date</th>
+                <th className="pb-4">Plan</th>
+                <th className="pb-4">Amount</th>
+                <th className="pb-4">Status</th>
+                <th className="pb-4 text-right">Invoice</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -1029,8 +983,8 @@ const PropertiesView = ({ onAddClick, onEditClick }: { onAddClick: () => void; o
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Properties</h1>
-        <p className="text-slate-500">Manage all your listed properties and their subscription status.</p>
+        <h1>Properties</h1>
+        <p>Manage all your listed properties and their subscription status.</p>
       </div>
       <button onClick={onAddClick} className="btn-primary shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
         <Plus className="w-4 h-4" />
@@ -1082,8 +1036,8 @@ const BookingsView = () => (
   <div className="space-y-6">
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Bookings</h1>
-        <p className="text-slate-500">Monitor and manage all guest reservations.</p>
+        <h1>Bookings</h1>
+        <p>Monitor and manage all guest reservations.</p>
       </div>
       <div className="flex items-center gap-3">
         <div className="relative">
@@ -1101,12 +1055,12 @@ const BookingsView = () => (
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="bg-slate-50 border-bottom border-border">
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Guest</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Property</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Check-in / Out</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-            <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+            <th className="px-6 py-4">Guest</th>
+            <th className="px-6 py-4">Property</th>
+            <th className="px-6 py-4">Check-in / Out</th>
+            <th className="px-6 py-4">Amount</th>
+            <th className="px-6 py-4">Status</th>
+            <th className="px-6 py-4 text-right">Action</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -1216,6 +1170,8 @@ export default function App() {
     if (typeof window !== 'undefined') localStorage.setItem('sidebarOpen', String(isSidebarOpen));
   }, [isSidebarOpen]);
 
+  const [isSupportPanelOpen, setIsSupportPanelOpen] = useState(false);
+
   // Floating submenu state
   const [floatingMenu, setFloatingMenu] = useState<{item: NavItem, top: number} | null>(null);
   const [floatingAnchor, setFloatingAnchor] = useState<DOMRect | null>(null);
@@ -1289,15 +1245,21 @@ export default function App() {
       case 'subscription':
         return <SubscriptionView subscription={subscription} setSubscription={setSubscription} />;
       case 'bookings':
-        return <BookingsView />;
-      case 'dashboard':
+        return <BookingManagementView />;
+      case 'reviews':
+        return <ReviewsManagementView />;
+      case 'staff':
+        return <StaffManagementView />;
+      case 'guests':
+        return <GuestManagementView />;
+      case 'booking-details':
       default:
         return (
           <div className="space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h1 className="text-[#111827]">Dashboard Overview</h1>
-                <p className="text-[#6B7280] mt-1">Welcome back, here's what's happening with your properties today.</p>
+                <h1>Good morning, Ashoka Palace!</h1>
+                <p>Here's what's happening across your properties today.</p>
               </div>
               <div className="flex items-center gap-3">
                 <button className="btn-secondary h-10">
@@ -1322,8 +1284,8 @@ export default function App() {
                     </div>
                     <span className="text-emerald-500 text-xs font-bold bg-emerald-50 px-2 py-1 rounded-full">{stat.change}</span>
                   </div>
-                  <p className="text-sm font-semibold text-[#6B7280]">{stat.label}</p>
-                  <h2 className="text-[#111827] mt-1">{stat.value}</h2>
+                  <p className="text-[14px] font-medium text-text-secondary">{stat.label}</p>
+                  <h2 className="metric-value mt-1">{stat.value}</h2>
                 </div>
               ))}
             </div>
@@ -1339,10 +1301,10 @@ export default function App() {
                     <table className="w-full text-left">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="pb-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider">Guest</th>
-                          <th className="pb-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider">Property</th>
-                          <th className="pb-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider">Status</th>
-                          <th className="pb-4 text-xs font-bold text-[#6B7280] uppercase tracking-wider text-right">Amount</th>
+                          <th className="pb-4">Guest</th>
+                          <th className="pb-4">Property</th>
+                          <th className="pb-4">Status</th>
+                          <th className="pb-4 text-right">Amount</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
@@ -1409,7 +1371,7 @@ export default function App() {
               <div className="space-y-8">
                 <div className="card">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-[#111827]">Properties Overview</h3>
+                    <h3 className="card-title">Properties Overview</h3>
                     <button onClick={() => setActiveTab('properties')} className="text-xs font-bold text-primary hover:underline">View All</button>
                   </div>
                   <div className="space-y-3">
@@ -1435,7 +1397,7 @@ export default function App() {
                 </div>
 
                 <div className="card">
-                  <h3 className="text-[#111827] mb-4">Quick Actions</h3>
+                  <h3 className="card-title mb-4">Quick Actions</h3>
                   <div className="grid grid-cols-2 gap-3">
                     {[
                       { label: 'Add Property', icon: Plus, action: handleAddProperty },
@@ -1456,7 +1418,7 @@ export default function App() {
                 </div>
 
                 <div className="card">
-                  <h3 className="text-[#111827] mb-4">Upcoming Check-ins</h3>
+                  <h3 className="card-title mb-4">Upcoming Check-ins</h3>
                   <div className="space-y-4">
                     {[
                       { name: 'Alice Johnson', room: 'Deluxe King #204', time: '14:00', status: 'On Time' },
@@ -1521,13 +1483,13 @@ export default function App() {
         {/* Toggle button always at top right, centered when collapsed */}
         <div className={`h-16 flex items-center px-3 gap-3 relative${!isSidebarOpen ? ' justify-center' : ''}`}> 
           {/* Logo and label */}
-          <div className="w-10 h-10 bg-white flex items-center justify-center rounded-lg shadow border border-primary">
-            <span className="text-primary font-extrabold text-xl" style={{fontFamily: 'Inter, sans-serif'}}>SCT</span>
+          <div className="w-10 h-10 bg-primary flex items-center justify-center rounded-lg shadow border border-white/10">
+            <Building2 className="w-6 h-6 text-white" />
           </div>
           {isSidebarOpen && (
-            <div className="ml-2 flex flex-col">
-              <span className="text-white font-bold text-xl tracking-tight leading-tight">SafeClimateTrip</span>
-              <span className="text-slate-200 text-xs leading-tight" style={{color:'#B6D0F7'}}>Travel Responsibly</span>
+            <div className="flex flex-col">
+              <span className="text-white font-bold text-lg tracking-tight leading-tight">Hostly Pro</span>
+              <span className="caption uppercase tracking-[0.02em] font-semibold text-slate-400">Property Manager</span>
             </div>
           )}
           {/* Collapse/expand button */}
@@ -1655,7 +1617,10 @@ export default function App() {
               <span className="hidden sm:inline">Add Property</span>
             </button>
             <div className="h-8 w-px bg-border mx-2"></div>
-            <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-colors">
+            <div 
+              onClick={() => setIsSupportPanelOpen(true)}
+              className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-colors active:scale-95"
+            >
               <img 
                 src="https://picsum.photos/seed/user/100/100" 
                 alt="User" 
@@ -1665,6 +1630,21 @@ export default function App() {
             </div>
           </div>
         </header>
+
+        <SupportPanel 
+          isOpen={isSupportPanelOpen} 
+          onClose={() => setIsSupportPanelOpen(false)}
+          user={{
+            name: 'Udit Bhatnagar',
+            email: 'udit@example.com',
+            avatar: 'https://picsum.photos/seed/user/100/100',
+            id: 'USR-88291',
+            orgId: 'ORG-5520',
+            role: 'Administrator',
+            plan: subscription.planId.charAt(0).toUpperCase() + subscription.planId.slice(1)
+          }}
+          activeProperty="Ashoka Palace"
+        />
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto">
