@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  XCircle, 
-  CheckCircle2, 
-  AlertCircle, 
-  Clock, 
-  Plus, 
-  ShieldCheck, 
-  DollarSign, 
-  Trash2, 
+import {
+  XCircle,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Plus,
+  ShieldCheck,
+  DollarSign,
+  Trash2,
   ChevronRight,
   Sparkles,
   Info,
@@ -45,30 +45,30 @@ const CancellationPolicyView = () => {
 
   // Constants
   const presets = [
-    { 
-      id: 'flexible', 
-      title: 'Flexible', 
+    {
+      id: 'flexible',
+      title: 'Flexible',
       subtitle: 'Guest friendly',
       description: 'Full refund 1 day prior to arrival. 50% refund if cancelled within 24 hours.',
       color: 'bg-emerald-500'
     },
-    { 
-      id: 'moderate', 
-      title: 'Moderate', 
+    {
+      id: 'moderate',
+      title: 'Moderate',
       subtitle: 'Most popular',
       description: 'Full refund 5 days prior to arrival. No refund if cancelled less than 5 days.',
       color: 'bg-indigo-500'
     },
-    { 
-      id: 'strict', 
-      title: 'Strict', 
+    {
+      id: 'strict',
+      title: 'Strict',
       subtitle: 'High protection',
       description: '50% refund up to 7 days before arrival. No refund afterwards.',
       color: 'bg-rose-500'
     },
-    { 
-      id: 'custom', 
-      title: 'Custom', 
+    {
+      id: 'custom',
+      title: 'Custom',
       subtitle: 'Tailored rules',
       description: 'Define your own specific refund percentages and timeframes.',
       color: 'bg-slate-700'
@@ -103,7 +103,7 @@ const CancellationPolicyView = () => {
   };
 
   return (
-    <div className="space-y-8 pb-10 max-w-7xl mx-auto">
+    <div className="space-y-8 pb-10 mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -118,7 +118,7 @@ const CancellationPolicyView = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          
+
           {/* Preset Options */}
           <section className="bg-white rounded-[2rem] border border-slate-100 shadow-sm p-8 space-y-6">
             <div className="flex items-center gap-3">
@@ -132,11 +132,10 @@ const CancellationPolicyView = () => {
                 <button
                   key={preset.id}
                   onClick={() => setSelectedPreset(preset.id as PresetPolicy)}
-                  className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 ${
-                    selectedPreset === preset.id 
-                    ? 'border-primary bg-primary/[0.02] ring-4 ring-primary/5' 
+                  className={`group relative p-6 rounded-2xl border-2 text-left transition-all duration-300 ${selectedPreset === preset.id
+                    ? 'border-primary bg-primary/[0.02] ring-4 ring-primary/5'
                     : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div>
@@ -152,7 +151,7 @@ const CancellationPolicyView = () => {
                     )}
                   </div>
                   <p className="text-sm text-slate-500 leading-relaxed font-medium">{preset.description}</p>
-                  
+
                   {/* Subtle hover effect */}
                   <div className={`absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity ${selectedPreset === preset.id ? 'hidden' : ''}`}>
                     <ArrowRight className="w-4 h-4 text-slate-400" />
@@ -186,9 +185,9 @@ const CancellationPolicyView = () => {
 
             <div className="relative pt-12 pb-6 px-4">
               <div className="absolute top-1/2 left-0 right-0 h-2 bg-slate-100 rounded-full -translate-y-1/2" />
-              
+
               {/* Dynamic Progress Bar */}
-              <div 
+              <div
                 className="absolute top-1/2 left-0 h-2 bg-gradient-to-r from-emerald-500 via-orange-400 to-rose-400 rounded-full -translate-y-1/2 transition-all duration-700"
                 style={{ width: '100%' }}
               />
@@ -198,26 +197,24 @@ const CancellationPolicyView = () => {
                   const points = getTimelinePoints();
                   const point = points.find(p => p.day === day) || points.find(p => p.day < day);
                   const pct = point ? point.pct : 0;
-                  
+
                   return (
                     <div key={day} className="flex flex-col items-center group">
                       <div className="absolute -top-10 flex flex-col items-center">
-                        <span className={`text-[10px] font-black px-2 py-1 rounded-lg shadow-sm border ${
-                          pct === 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                        <span className={`text-[10px] font-black px-2 py-1 rounded-lg shadow-sm border ${pct === 100 ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                           pct > 0 ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                          'bg-slate-50 text-slate-400 border-slate-100'
-                        }`}>
+                            'bg-slate-50 text-slate-400 border-slate-100'
+                          }`}>
                           {pct}%
                         </span>
                         <div className="w-px h-4 bg-slate-200 my-1" />
                       </div>
-                      
-                      <div className={`w-5 h-5 rounded-full border-4 border-white shadow-md z-10 transition-all duration-500 group-hover:scale-125 ${
-                        pct === 100 ? 'bg-emerald-500' :
+
+                      <div className={`w-5 h-5 rounded-full border-4 border-white shadow-md z-10 transition-all duration-500 group-hover:scale-125 ${pct === 100 ? 'bg-emerald-500' :
                         pct > 0 ? 'bg-orange-500' :
-                        'bg-slate-300'
-                      }`} />
-                      
+                          'bg-slate-300'
+                        }`} />
+
                       <div className="mt-4 text-center">
                         <p className="text-xs font-bold text-slate-900">{day === 0 ? 'Check-in' : `${day}d before`}</p>
                       </div>
@@ -231,7 +228,7 @@ const CancellationPolicyView = () => {
           {/* Custom Rules Builder */}
           <AnimatePresence>
             {selectedPreset === 'custom' && (
-              <motion.section 
+              <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
@@ -244,7 +241,7 @@ const CancellationPolicyView = () => {
                     </div>
                     <h2 className="text-xl font-bold text-slate-900">Custom Refund Rules</h2>
                   </div>
-                  <button 
+                  <button
                     onClick={addCustomRule}
                     className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-100 transition-colors"
                   >
@@ -255,7 +252,7 @@ const CancellationPolicyView = () => {
 
                 <div className="space-y-4">
                   {customRules.map((rule, index) => (
-                    <motion.div 
+                    <motion.div
                       layout
                       key={rule.id}
                       className="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl bg-slate-50/50 border border-slate-100 group"
@@ -263,12 +260,12 @@ const CancellationPolicyView = () => {
                       <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-xs font-bold text-slate-400 shadow-sm">
                         {index + 1}
                       </div>
-                      
+
                       <div className="flex-1 flex items-center gap-3">
                         <div className="relative flex-1">
-                          <input 
-                            type="number" 
-                            value={rule.daysBefore} 
+                          <input
+                            type="number"
+                            value={rule.daysBefore}
                             onChange={(e) => updateCustomRule(rule.id, 'daysBefore', parseInt(e.target.value))}
                             className="input w-full pl-4 pr-12 font-bold"
                           />
@@ -278,9 +275,9 @@ const CancellationPolicyView = () => {
                           <ArrowRight className="w-4 h-4" />
                         </span>
                         <div className="relative flex-1">
-                          <input 
-                            type="number" 
-                            value={rule.refundPercentage} 
+                          <input
+                            type="number"
+                            value={rule.refundPercentage}
                             onChange={(e) => updateCustomRule(rule.id, 'refundPercentage', parseInt(e.target.value))}
                             className="input w-full pl-4 pr-12 font-bold"
                           />
@@ -288,7 +285,7 @@ const CancellationPolicyView = () => {
                         </div>
                       </div>
 
-                      <button 
+                      <button
                         onClick={() => removeCustomRule(rule.id)}
                         className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
                       >
@@ -296,7 +293,7 @@ const CancellationPolicyView = () => {
                       </button>
                     </motion.div>
                   ))}
-                  
+
                   {customRules.length === 0 && (
                     <div className="text-center py-10 rounded-2xl border-2 border-dashed border-slate-100">
                       <p className="text-slate-400 font-medium">No custom rules defined yet.</p>
@@ -316,7 +313,7 @@ const CancellationPolicyView = () => {
               </div>
               <h2 className="text-xl font-bold text-slate-900">Payment Protection</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/20 transition-all group">
                 <div className="flex items-center justify-between mb-4">
@@ -327,11 +324,11 @@ const CancellationPolicyView = () => {
                   <Info className="w-4 h-4 text-slate-300 cursor-help" />
                 </div>
                 <div className="relative">
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     value={paymentProtection.advancePercentage}
-                    onChange={(e) => setPaymentProtection({...paymentProtection, advancePercentage: parseInt(e.target.value)})}
-                    className="input w-full pl-4 pr-12 text-2xl font-black text-slate-900 border-none bg-white shadow-sm group-hover:ring-2 group-hover:ring-primary/10 transition-all" 
+                    onChange={(e) => setPaymentProtection({ ...paymentProtection, advancePercentage: parseInt(e.target.value) })}
+                    className="input w-full pl-4 pr-12 text-2xl font-black text-slate-900 border-none bg-white shadow-sm group-hover:ring-2 group-hover:ring-primary/10 transition-all"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400">%</span>
                 </div>
@@ -348,11 +345,11 @@ const CancellationPolicyView = () => {
                 </div>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-slate-400">$</span>
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     value={paymentProtection.securityDeposit}
-                    onChange={(e) => setPaymentProtection({...paymentProtection, securityDeposit: parseInt(e.target.value)})}
-                    className="input w-full pl-10 pr-4 text-2xl font-black text-slate-900 border-none bg-white shadow-sm group-hover:ring-2 group-hover:ring-primary/10 transition-all" 
+                    onChange={(e) => setPaymentProtection({ ...paymentProtection, securityDeposit: parseInt(e.target.value) })}
+                    className="input w-full pl-10 pr-4 text-2xl font-black text-slate-900 border-none bg-white shadow-sm group-hover:ring-2 group-hover:ring-primary/10 transition-all"
                   />
                 </div>
                 <p className="text-xs text-slate-400 mt-3 font-medium">Refundable deposit for damages or incidentals.</p>
@@ -368,7 +365,7 @@ const CancellationPolicyView = () => {
               </div>
               <h2 className="text-xl font-bold text-slate-900">No-Show Policy</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
                 { id: 'full_charge', title: 'Full Charge', icon: DollarSign, desc: '100% of total amount' },
@@ -378,11 +375,10 @@ const CancellationPolicyView = () => {
                 <button
                   key={policy.id}
                   onClick={() => setNoShowPolicy(policy.id)}
-                  className={`p-5 rounded-2xl border-2 text-center transition-all ${
-                    noShowPolicy === policy.id 
-                    ? 'border-rose-500 bg-rose-50/30' 
+                  className={`p-5 rounded-2xl border-2 text-center transition-all ${noShowPolicy === policy.id
+                    ? 'border-rose-500 bg-rose-50/30'
                     : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   <policy.icon className={`w-6 h-6 mx-auto mb-2 ${noShowPolicy === policy.id ? 'text-rose-500' : 'text-slate-400'}`} />
                   <h3 className={`text-sm font-bold ${noShowPolicy === policy.id ? 'text-rose-600' : 'text-slate-900'}`}>{policy.title}</h3>
@@ -395,7 +391,7 @@ const CancellationPolicyView = () => {
 
         {/* Sidebar Sections */}
         <div className="space-y-8">
-          
+
           {/* SafeClimate Emergency Clause */}
           <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-slate-900 to-primary rounded-[2rem] p-8 text-white shadow-2xl">
             <div className="relative z-10 space-y-6">
@@ -404,27 +400,27 @@ const CancellationPolicyView = () => {
                   <ShieldAlert className="w-6 h-6 text-emerald-400" />
                   <h2 className="text-lg font-black tracking-tight uppercase !text-white">SafeClimate™</h2>
                 </div>
-                <button 
+                <button
                   onClick={() => setSafeClimateEnabled(!safeClimateEnabled)}
                   className={`relative w-12 h-6 rounded-full transition-colors duration-200 ease-in-out ${safeClimateEnabled ? 'bg-emerald-500' : 'bg-slate-700'}`}
                 >
                   <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ${safeClimateEnabled ? 'translate-x-6' : 'translate-x-0'}`} />
                 </button>
               </div>
-              
+
               <div>
                 <h3 className="text-xl font-bold mb-2 !text-white">Emergency Weather Clause</h3>
                 <p className="text-sm text-white/80 leading-relaxed">
                   Automatically allows full refunds to guests during extreme weather events (Level 3+ alerts).
                 </p>
               </div>
-              
+
               <div className="pt-4 border-t border-white/10 flex items-center gap-3">
                 <Sparkles className="w-5 h-5 text-amber-400" />
                 <span className="text-xs font-bold text-white/90">Increases trust score by +15%</span>
               </div>
             </div>
-            
+
             {/* Background pattern */}
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
           </section>
@@ -488,7 +484,7 @@ const CancellationPolicyView = () => {
               <Sparkles className="w-5 h-5" />
               <h2 className="text-sm font-bold uppercase tracking-tight">AI Insights</h2>
             </div>
-            
+
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-white border border-indigo-100 shadow-sm transition-all hover:shadow-md">
                 <div className="flex items-start gap-3">
@@ -518,7 +514,7 @@ const CancellationPolicyView = () => {
                 </div>
               </div>
             </div>
-            
+
             <button className="w-full text-center text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
               View Market Analytics
             </button>
@@ -531,11 +527,11 @@ const CancellationPolicyView = () => {
 
 // Internal icon helpers to avoid massive imports if needed, but since we have lucide let's use them
 const TrendingUp = ({ className }: { className: string }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17" /><polyline points="16 7 22 7 22 13" /></svg>
 );
 
 const Users = ({ className }: { className: string }) => (
-  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
 );
 
 export default CancellationPolicyView;

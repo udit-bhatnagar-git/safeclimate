@@ -142,6 +142,9 @@ const StaffManagementView = () => {
   const [propertyFilter, setPropertyFilter] = useState('All Properties');
   const [statusFilter, setStatusFilter] = useState('All Status');
   const [isAssignTaskModalOpen, setIsAssignTaskModalOpen] = useState(false);
+  const [isEditingAssignment, setIsEditingAssignment] = useState(false);
+
+  const availableProperties = ['Grand Plaza Hotel', 'Sunset Resort', 'Urban Suites', 'Beach Villa', 'Lake House', 'Mountain Cabin'];
 
   const stats = [
     { label: 'Total Staff', value: '42', icon: Users, color: 'bg-blue-50 text-blue-600' },
@@ -430,6 +433,53 @@ const StaffManagementView = () => {
                           <p className="text-xs text-slate-400 font-medium">Join Date</p>
                           <p className="text-sm font-semibold text-slate-900">{selectedStaff.joinDate}</p>
                         </div>
+                      </div>
+                      <div className="flex flex-col gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-primary/20 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <div className="p-2 rounded-lg bg-white shadow-sm">
+                              <MapPin className="w-4 h-4 text-primary" />
+                            </div>
+                            <div>
+                              <p className="text-xs text-slate-400 font-medium">Assigned Property</p>
+                              <p className="text-sm font-semibold text-slate-900">{selectedStaff.assignedProperty}</p>
+                            </div>
+                          </div>
+                          {!isEditingAssignment && (
+                            <button 
+                              onClick={() => setIsEditingAssignment(true)}
+                              className="text-xs font-bold text-primary hover:underline"
+                            >
+                              Change
+                            </button>
+                          )}
+                        </div>
+                        {isEditingAssignment && (
+                          <div className="space-y-3 pt-2 border-t border-slate-200">
+                            <select 
+                              className="input w-full h-10 text-sm"
+                              defaultValue={selectedStaff.assignedProperty}
+                            >
+                              {availableProperties.map(p => (
+                                <option key={p} value={p}>{p}</option>
+                              ))}
+                            </select>
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => setIsEditingAssignment(false)}
+                                className="btn-primary h-8 flex-1 text-xs"
+                              >
+                                Save Assignment
+                              </button>
+                              <button 
+                                onClick={() => setIsEditingAssignment(false)}
+                                className="btn-secondary h-8 flex-1 text-xs"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </section>
