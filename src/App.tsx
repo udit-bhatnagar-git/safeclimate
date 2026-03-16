@@ -403,8 +403,8 @@ export default function App() {
           </div>
           {isSidebarOpen && (
             <div className="flex flex-col">
-              <span className="text-white font-bold text-lg tracking-tight leading-tight">Hostly Pro</span>
-              <span className="caption uppercase tracking-[0.02em] font-semibold text-slate-400">Property Manager</span>
+              <span className="text-white font-bold text-lg tracking-tight leading-tight">SafeClimateTrip</span>
+              <span className="caption uppercase tracking-[0.02em] font-semibold text-slate-400">Travel Responsibly</span>
             </div>
           )}
           {/* Collapse/expand button */}
